@@ -11,6 +11,11 @@
 # neither works unattended, which is why this is a script a person runs rather
 # than a step in CI. An agent cannot complete it.
 #
+# You do NOT need to log in first. If `npm whoami` comes back empty the script
+# starts `npm login` for you and carries on, the way the sibling packages'
+# scripts do. Refusing there — as this script briefly did — only makes the
+# operator run the whole preflight a second time for no reason.
+#
 # It keeps the lesson the sibling packages' scripts were built on: a publish that
 # prints no error can still have published nothing, or the wrong thing. So it
 # reads the tarball before publishing and installs from the REGISTRY afterwards,
@@ -97,12 +102,33 @@ npm run verify:package
 step "5/7  npm account"
 
 # A 404 from `npm publish` means AUTH, not a missing package — npm answers 404
-# rather than 403 so it will not leak whether a package exists. So the account is
-# checked first, where the error is honest.
-WHOAMI="$(npm whoami 2>/dev/null || true)"
-[ -n "$WHOAMI" ] || fail "not logged in to npm. Run: npm login  (account: stonedogcode)"
-echo "publishing as: $WHOAMI"
-[ "$WHOAMI" = "stonedogcode" ] || printf '\033[33mwarning: expected account stonedogcode\033[0m\n'
+# rather than 403 so it will not leak whether a package exists. `npm whoami`
+# turns that confusing failure into a clear one, and is the only thing that
+# reveals an `_authToken` that is present but expired.
+#
+# Not being logged in is NOT a refusal. This script is already interactive — it
+# is going to prompt for a 2FA one-time password two steps from now — so
+# stopping to tell someone to run `npm login` just makes them run the whole
+# preflight again. Start the login flow, the way the sibling packages' scripts
+# do, and carry on.
+if ! WHOAMI="$(npm whoami 2>/dev/null)"; then
+  echo "  not logged in — starting the browser login flow"
+  npm login
+  WHOAMI="$(npm whoami)"
+fi
+echo "  authenticated as $WHOAMI"
+[ "$WHOAMI" = "stonedogcode" ] || printf '\033[33m  warning: expected account stonedogcode\033[0m\n'
+
+# Ownership, but only if the package already exists. On a first publish there is
+# nothing to own yet, and `npm owner ls` on a nonexistent package fails in a way
+# that reads exactly like a permissions problem.
+if npm view "$PACKAGE" version >/dev/null 2>&1; then
+  npm owner ls "$PACKAGE" 2>/dev/null | grep -q "^$WHOAMI " \
+    || fail "'$WHOAMI' is not an owner of $PACKAGE, so publishing will fail with a misleading 404."
+  echo "  $WHOAMI is an owner of $PACKAGE"
+else
+  echo "  $PACKAGE does not exist on the registry yet — this is the FIRST publish, which creates it"
+fi
 
 # ---------------------------------------------------------------------------
 # 6. Publish. npm prompts for the OTP here.
