@@ -1,30 +1,30 @@
 {
   "schemaVersion": 1,
   "project": "stonedog-testrunner",
-  "generatedAt": "2026-08-27T17:50:47.365Z",
-  "commit": "931bcc7c7f7f14207955a19cab6be85f92bd2dfe",
+  "generatedAt": "2026-08-27T18:34:57.974Z",
+  "commit": "bf6fa0bc7f0be09a11fc395320917254bd4e888c",
   "tiers": {
     "unit": {
       "declared": true,
       "globs": 1,
       "files": 16,
-      "cases": 189,
+      "cases": 194,
       "languages": {
         "python": {
           "files": 16,
-          "cases": 189
+          "cases": 194
         }
       }
     },
     "integration": {
       "declared": true,
       "globs": 2,
-      "files": 8,
-      "cases": 103,
+      "files": 7,
+      "cases": 98,
       "languages": {
         "python": {
-          "files": 8,
-          "cases": 103
+          "files": 7,
+          "cases": 98
         }
       }
     },

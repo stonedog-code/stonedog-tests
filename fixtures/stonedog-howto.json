@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "project": "stonedog-howto",
-  "generatedAt": "2026-08-27T17:50:46.780Z",
-  "commit": "950efed4ab78c73d548fc3badca6bc181ecf726c",
+  "generatedAt": "2026-08-27T18:34:57.248Z",
+  "commit": "b30d27b9170844a6dd8dcdb54fe22d1d72833cf7",
   "tiers": {
     "unit": {
       "declared": true,

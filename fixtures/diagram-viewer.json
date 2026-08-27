@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "project": "diagram-viewer",
-  "generatedAt": "2026-08-27T17:50:47.639Z",
-  "commit": "c1cd7d813b17326a0f575454d0b5c6a63bf3bd65",
+  "generatedAt": "2026-08-27T18:34:58.293Z",
+  "commit": "29a1b6c4daf2f57e1e081ac922d487a96086f117",
   "tiers": {
     "unit": {
       "declared": true,
