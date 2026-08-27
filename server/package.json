@@ -1,0 +1,26 @@
+{
+  "name": "@stonedogcode/tests-server",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The standalone test-inventory server: the fleet table running against the committed fixtures, with no private data and no credentials.",
+  "//private": "Never published. It is part of the repository so the package can be seen working; it is not part of the package, whose `files` list ships src/ alone.",
+  "type": "module",
+  "//scripts": "No `build`. The fixture reading lives in a dev-server middleware, so a static build would produce a site whose own /api/inventories 404s — a broken artefact that looks like a working one. `type-check` covers compilation.",
+  "scripts": {
+    "dev": "vite",
+    "type-check": "tsc --noEmit"
+  },
+  "//dependencies": "stonedog-logs lives HERE and not in the library. The library is zero-dependency by design; a logger is only wanted by a process that actually runs, and imposing one on every consumer of a React table would be the opposite of the point.",
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "stonedog-logs": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.9.3",
+    "vite": "^6.0.0"
+  }
+}

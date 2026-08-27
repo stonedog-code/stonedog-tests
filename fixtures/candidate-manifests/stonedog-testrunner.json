@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "project": "stonedog-testrunner",
+  "tiers": {
+    "unit": {
+      "include": ["tests/unit/**/test_*.py"]
+    },
+    "integration": {
+      "include": ["tests/integration/**/test_*.py", "tests/conformance/**/test_*.py"]
+    }
+  }
+}

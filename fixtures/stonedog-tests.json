@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "project": "stonedog-tests",
+  "generatedAt": "2026-08-27T17:50:47.911Z",
+  "commit": "106ef8bd029b6353c8435ec0ff8cdf2c01e63ea8",
+  "tiers": {
+    "unit": {
+      "declared": true,
+      "globs": 2,
+      "files": 7,
+      "cases": 54,
+      "languages": {
+        "typescript": {
+          "files": 7,
+          "cases": 54
+        }
+      }
+    },
+    "integration": {
+      "declared": true,
+      "globs": 1,
+      "files": 1,
+      "cases": 12,
+      "languages": {
+        "typescript": {
+          "files": 1,
+          "cases": 12
+        }
+      }
+    },
+    "e2e": {
+      "declared": true,
+      "globs": 1,
+      "files": 1,
+      "cases": 6,
+      "languages": {
+        "typescript": {
+          "files": 1,
+          "cases": 6
+        }
+      }
+    }
+  }
+}

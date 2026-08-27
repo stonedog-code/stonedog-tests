@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "project": "stonedog-howto",
+  "generatedAt": "2026-08-27T17:50:46.780Z",
+  "commit": "950efed4ab78c73d548fc3badca6bc181ecf726c",
+  "tiers": {
+    "unit": {
+      "declared": true,
+      "globs": 2,
+      "files": 11,
+      "cases": 125,
+      "languages": {
+        "typescript": {
+          "files": 11,
+          "cases": 125
+        }
+      }
+    },
+    "integration": {
+      "declared": true,
+      "globs": 1,
+      "files": 2,
+      "cases": 27,
+      "languages": {
+        "typescript": {
+          "files": 2,
+          "cases": 27
+        }
+      }
+    },
+    "e2e": {
+      "declared": true,
+      "globs": 1,
+      "files": 2,
+      "cases": 5,
+      "languages": {
+        "typescript": {
+          "files": 2,
+          "cases": 5
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "project": "diagram-viewer",
+  "generatedAt": "2026-08-27T17:50:47.639Z",
+  "commit": "c1cd7d813b17326a0f575454d0b5c6a63bf3bd65",
+  "tiers": {
+    "unit": {
+      "declared": true,
+      "globs": 1,
+      "files": 5,
+      "cases": 56,
+      "languages": {
+        "python": {
+          "files": 5,
+          "cases": 56
+        }
+      }
+    },
+    "integration": {
+      "declared": false
+    },
+    "e2e": {
+      "declared": true,
+      "globs": 1,
+      "files": 3,
+      "cases": 18,
+      "languages": {
+        "python": {
+          "files": 3,
+          "cases": 18
+        }
+      }
+    }
+  }
+}
