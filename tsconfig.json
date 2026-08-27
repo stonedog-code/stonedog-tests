@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node", "jest"],
+    "baseUrl": ".",
+    "paths": {
+      "@stonedogcode/tests": ["src/index.ts"],
+      "@stonedogcode/tests/node": ["src/node/index.ts"],
+      "@stonedogcode/tests/styled": ["src/styled/index.ts"]
+    }
+  },
+  "//paths": "Three aliases, written in four places that must agree because each tool reads only its own: here, server/tsconfig.json, server/vite.config.ts and jest.config.cjs. The server imports this package by its public specifier, exactly as a consumer does.",
+  "include": ["src/**/*.ts", "src/**/*.tsx", "test/**/*.ts", "panda.config.ts", "styled-system/**/*.ts"],
+  "exclude": ["node_modules", "dist", "coverage", "server", "e2e"]
+}

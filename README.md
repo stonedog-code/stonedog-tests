@@ -80,30 +80,54 @@ projects by a single number, and nothing should be built on top of it that does.
 ### Collect
 
 ```bash
-npx @stonedogcode/tests collect --repo ../some-project
+npm run collect -- --repo ../some-project
 ```
 
 Reads `../some-project/stonedog-tests.json`, walks the declared globs, and
 writes an inventory document to stdout. Every run reports the size of the set it
-examined:
+examined, on stderr, so it stays visible when stdout is redirected:
 
 ```
-stonedog-howto: 3 tiers declared, 6 globs, 19 files matched
+stonedog-howto: 3 tier(s) declared, 4 glob(s), 15 file(s) matched
 ```
 
 `0 files over 0 globs` and `0 files over 6 globs` are the same output on a
 careless tool and completely different facts. This one always says which.
 
+Flags: `--repo` (required), `--out <file>`, `--project <name>`, and
+`--manifest <path>` for trying a candidate manifest against a repository before
+committing one to it.
+
+**There is deliberately no `bin`.** This package ships TypeScript source (Panda
+needs it), and a `bin` pointing at a `.ts` file cannot execute on the Node 22
+floor the package declares — a command that works on only some of the versions
+you claim to support is worse than none. Consumers call the collector as a
+library:
+
+```ts
+import { collect } from "@stonedogcode/tests/node";
+
+const { inventory, report } = await collect({ repo: "../some-project" });
+```
+
 ### Render
 
 ```tsx
+import { toFleetEntry } from "@stonedogcode/tests";
 import { FleetTable } from "@stonedogcode/tests/styled";
 
-<FleetTable inventories={inventories} />;
+const entries = projects.map((name) => toFleetEntry(name, documents[name]));
+
+<FleetTable entries={entries} />;
 ```
 
 The components take data as a prop and know nothing about where it came from —
 no fetch, no database, no S3 client. The host supplies the data; this renders it.
+
+`toFleetEntry` never throws. Pass it `undefined` for a project that has
+published nothing, and hand it whatever you fetched for the rest: a malformed or
+newer-schema document becomes a legible row rather than an exception, so one
+project's bad publish cannot blank the whole table.
 
 ### Run the standalone server
 

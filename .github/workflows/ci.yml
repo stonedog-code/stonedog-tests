@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A newer push supersedes an in-flight run for the same ref, but never on main:
+# cancelling there is how an aggregating gate ends up reporting `failure` when
+# no lane actually failed.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  gate:
+    name: Gate (typecheck, lint, unit, integration)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # 22 is this package's declared floor, and the floor is the version
+          # worth gating on: the collector uses `fs.promises.glob`, added in 22,
+          # and testing only on 24 would let a real break through.
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type-check the package
+        run: npm run type-check
+
+      - name: Type-check the standalone server
+        run: npm run type-check:server
+
+      - name: Lint
+        run: npm run lint
+
+      # Each tier reports its own count. A tier that silently selects zero files
+      # exits 0 and reads as a pass, so the counts are the evidence, not the
+      # green tick.
+      - name: Unit tier
+        run: npm run test -- --ci --verbose=false
+
+      - name: Integration tier
+        run: npm run test:integration -- --ci --verbose=false
+
+      - name: Report what the suites examined
+        if: always()
+        run: |
+          echo "Unit test files:        $(find src -name '*.test.ts' -o -name '*.test.tsx' | wc -l)"
+          echo "Integration test files: $(find test/integration -name '*.test.ts' | wc -l)"
+          echo "E2E spec files:         $(find e2e -name '*.spec.ts' | wc -l)"
+          echo "Committed fixtures:     $(find fixtures -maxdepth 1 -name '*.json' | wc -l)"
+
+  e2e:
+    name: E2E (real browser)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Only chromium: the mobile project in playwright.config.ts is a viewport
+      # of the same browser, not a second engine to download.
+      - name: Install Playwright chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E tier
+        run: npm run test:e2e
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "project": "stonedog-tests",
+  "tiers": {
+    "unit": {
+      "include": ["src/**/__tests__/**/*.test.ts", "src/**/__tests__/**/*.test.tsx"]
+    },
+    "integration": {
+      "include": ["test/integration/**/*.test.ts"]
+    },
+    "e2e": {
+      "include": ["e2e/**/*.spec.ts"]
+    }
+  }
+}

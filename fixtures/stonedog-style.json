@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "project": "stonedog-style",
+  "generatedAt": "2026-08-27T17:50:47.104Z",
+  "commit": "7823bcf496d6f38210876b9d37096d684babe863",
+  "tiers": {
+    "unit": {
+      "declared": true,
+      "globs": 2,
+      "files": 52,
+      "cases": 709,
+      "languages": {
+        "typescript": {
+          "files": 52,
+          "cases": 709
+        }
+      }
+    },
+    "integration": {
+      "declared": false
+    },
+    "e2e": {
+      "declared": true,
+      "globs": 1,
+      "files": 33,
+      "cases": 211,
+      "languages": {
+        "typescript": {
+          "files": 33,
+          "cases": 211
+        }
+      }
+    }
+  }
+}
