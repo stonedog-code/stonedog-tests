@@ -47,6 +47,13 @@ jobs:
       - name: Integration tier
         run: npm run test:integration -- --ci --verbose=false
 
+      # The tarball, not the checkout. `files`, `exports` and the packed contents
+      # are invisible to a suite that runs on source files in this repo, and they
+      # are exactly what breaks at publish time — after review, when the version
+      # is already burned and cannot be reused.
+      - name: Package (pack, install as a consumer, run it)
+        run: npm run verify:package
+
       - name: Report what the suites examined
         if: always()
         run: |
