@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "project": "stonedog-tests",
-  "generatedAt": "2026-08-27T17:50:47.911Z",
-  "commit": "106ef8bd029b6353c8435ec0ff8cdf2c01e63ea8",
+  "generatedAt": "2026-08-27T18:34:58.584Z",
+  "commit": "f6889d20c8e574bfe9bcd5c73b0335e47949521d",
   "tiers": {
     "unit": {
       "declared": true,

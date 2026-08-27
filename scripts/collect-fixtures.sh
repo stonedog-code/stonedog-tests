@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# Regenerate the demo fixtures from REAL repositories.
+# Regenerate the demo fixtures from REAL repositories, using each repository's
+# OWN committed manifest.
 #
 # The fixtures are committed so the standalone server and the component tests
 # run against real collected output rather than hand-written mocks — a UI built
@@ -10,15 +11,18 @@
 # inventory carries counts and languages and no paths, so it is not the
 # reconnaissance a feature map would be — but a public repo's demo data should
 # come from public repos, and that rule is cheaper to keep than to argue.
+#
+# There is no `--manifest` here any more, and its absence is the point: each of
+# these projects now declares its own tiers at its own root, reviewed by the
+# people who know what those tests are. Passing a manifest from this repository
+# would mean this package deciding what another repository's tests are, which is
+# exactly the guessing the whole design refuses.
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 SIBLINGS="${SIBLINGS:-..}"
-MANIFESTS="fixtures/candidate-manifests"
 
-# The projects with a candidate manifest, plus this repository, which has a real
-# one at its own root.
 PROJECTS="stonedog-howto stonedog-style stonedog-testrunner diagram-viewer"
 
 collected=0
@@ -34,14 +38,16 @@ for project in $PROJECTS; do
     skipped=$((skipped + 1))
     continue
   fi
-  npm run --silent collect -- \
-    --repo "$repo" \
-    --manifest "$MANIFESTS/$project.json" \
-    --out "fixtures/$project.json"
+  if [ ! -f "$repo/stonedog-tests.json" ]; then
+    printf 'SKIP %s: no stonedog-tests.json — the project declares its own tiers\n' "$project" >&2
+    skipped=$((skipped + 1))
+    continue
+  fi
+  npm run --silent collect -- --repo "$repo" --out "fixtures/$project.json"
   collected=$((collected + 1))
 done
 
-# Dogfooding: this repository declares its own tiers for real.
+# Dogfooding: this repository declares its own tiers too.
 npm run --silent collect -- --repo . --out fixtures/stonedog-tests.json
 collected=$((collected + 1))
 
