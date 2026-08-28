@@ -1,4 +1,4 @@
-import { readInventory, shapeOf, SCHEMA_VERSION, type Inventory } from "../schema.js";
+import { readInventory, shapeOf, SCHEMA_VERSION, type Inventory } from "../schema";
 
 const tier = (files: number) => ({
   declared: true as const,

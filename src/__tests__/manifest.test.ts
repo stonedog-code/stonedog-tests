@@ -1,4 +1,4 @@
-import { readManifest } from "../manifest.js";
+import { readManifest } from "../manifest";
 
 const valid = {
   schemaVersion: 1,

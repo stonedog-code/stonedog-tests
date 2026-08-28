@@ -1,5 +1,5 @@
-import { readableCount, toFleetEntry } from "../fleet.js";
-import { SCHEMA_VERSION, type Inventory } from "../schema.js";
+import { readableCount, toFleetEntry } from "../fleet";
+import { SCHEMA_VERSION, type Inventory } from "../schema";
 
 const good: Inventory = {
   schemaVersion: SCHEMA_VERSION,

@@ -13,7 +13,7 @@
 
 import { writeFile } from "node:fs/promises";
 
-import { collect, CollectError, type CollectReport } from "./collect.js";
+import { collect, CollectError, type CollectReport } from "./collect";
 
 export interface Args {
   repo: string;
