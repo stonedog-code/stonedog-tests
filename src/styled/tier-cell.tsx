@@ -18,7 +18,7 @@ import * as React from "react";
 // resolves in the editor and fails at runtime under Node's ESM resolver.
 import { StyledHStack, StyledTag, StyledText } from "@stonedogcode/style";
 
-import type { LanguageCount, TierReport } from "../schema.js";
+import type { LanguageCount, TierReport } from "../schema";
 
 const LANGUAGE_LABEL: Record<string, string> = {
   typescript: "ts",

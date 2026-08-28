@@ -12,7 +12,7 @@
  * package.
  */
 
-import { SCHEMA_VERSION, TIERS, type Tier } from "./schema.js";
+import { SCHEMA_VERSION, TIERS, type Tier } from "./schema";
 
 /** The filename a project commits at its root. */
 export const MANIFEST_FILENAME = "stonedog-tests.json";

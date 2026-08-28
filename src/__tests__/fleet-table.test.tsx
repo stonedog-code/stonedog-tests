@@ -1,9 +1,9 @@
 import * as React from "react";
 import { render, screen } from "@testing-library/react";
 
-import { FleetTable } from "../styled/fleet-table.js";
-import { toFleetEntry } from "../fleet.js";
-import { SCHEMA_VERSION, type Inventory, type TierReport } from "../schema.js";
+import { FleetTable } from "../styled/fleet-table";
+import { toFleetEntry } from "../fleet";
+import { SCHEMA_VERSION, type Inventory, type TierReport } from "../schema";
 
 const counted = (files: number): TierReport => ({
   declared: true,

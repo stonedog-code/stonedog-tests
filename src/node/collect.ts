@@ -20,9 +20,9 @@ import {
   type LanguageCount,
   type Tier,
   type TierReport,
-} from "../schema.js";
-import { MANIFEST_FILENAME, readManifest, type TestManifest } from "../manifest.js";
-import { countCases, languageOf } from "../languages.js";
+} from "../schema";
+import { MANIFEST_FILENAME, readManifest, type TestManifest } from "../manifest";
+import { countCases, languageOf } from "../languages";
 
 const execFileAsync = promisify(execFile);
 

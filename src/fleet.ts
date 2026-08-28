@@ -8,7 +8,7 @@
  * vanishes from a table reads as a project that is fine.
  */
 
-import { readInventory, type Inventory } from "./schema.js";
+import { readInventory, type Inventory } from "./schema";
 
 export type FleetEntry =
   | { project: string; status: "ok"; inventory: Inventory }
