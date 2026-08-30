@@ -1,6 +1,6 @@
 {
   "name": "@stonedogcode/tests",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A test-inventory surface for a fleet of repositories: how many tests each project has, at which tier, in which language, collected from projects that declare their tiers rather than having them guessed.",
   "license": "Apache-2.0",
   "author": "StoneDogCode L.L.C.",

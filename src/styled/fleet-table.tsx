@@ -1,5 +1,26 @@
+"use client";
+
 /**
  * The fleet table: one row per project, one column per tier.
+ *
+ * ## Why `"use client"`, and why its absence was not a style question
+ *
+ * This component reaches for `StyledTable`'s COMPOUND members — `.Caption`,
+ * `.Header`, `.Body`, `.Row`, `.Cell`. `StyledTable` declares `"use client"`,
+ * so in a consumer's App Router tree its export is replaced by a client
+ * *reference* at the RSC boundary, and the static properties hung off it are
+ * not carried across: every one of them reads `undefined`.
+ *
+ * Without the directive above, this module runs as a Server Component and React
+ * throws on the first `undefined` element type, which Next renders as the
+ * fallback "This page couldn't load" page with no detail. That is what
+ * stonedogcode.com/admin/tests served (NEH-1284).
+ *
+ * The trap is that nothing local reports it. The compound members are all
+ * present and correctly assigned in `@stonedogcode/style`; a jsdom render
+ * imports this module directly, so no boundary exists and every test in
+ * `__tests__/fleet-table.test.tsx` passes either way. The directive is the
+ * whole fix, and `__tests__/client-directive.test.ts` is what keeps it.
  *
  * Two rules this component exists to keep:
  *

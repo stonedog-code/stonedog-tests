@@ -1,5 +1,14 @@
+"use client";
+
 /**
  * One tier's cell.
+ *
+ * `"use client"` for the same reason as `fleet-table.tsx` — see the long note
+ * there. This module renders `StyledHStack`, which carries no directive of its
+ * own, so without one here it would execute on the server and resolve
+ * `styled-system/patterns` through a path mapping the consumer's bundler does
+ * not have. It is also only ever rendered from inside `FleetTable`, so it must
+ * sit on the same side of the boundary regardless.
  *
  * The whole reason this is a component rather than a template string is that a
  * tier has three states and two of them are easy to render as "0":
