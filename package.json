@@ -1,6 +1,6 @@
 {
   "name": "@stonedogcode/tests",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A test-inventory surface for a fleet of repositories: how many tests each project has, at which tier, in which language, collected from projects that declare their tiers rather than having them guessed.",
   "license": "Apache-2.0",
   "author": "StoneDogCode L.L.C.",
@@ -16,13 +16,20 @@
   ],
   "//exports": "Three entry points so a consumer importing the table does not drag `node:fs` into a client bundle. `.` is isomorphic (types, schema readers), `./node` is the collector, `./styled` is the React layer and the only one that needs @stonedogcode/style.",
   "exports": {
-    ".": "./src/index.ts",
-    "./node": "./src/node/index.ts",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node/index.d.ts",
+      "default": "./dist/node/index.js"
+    },
     "./styled": "./src/styled/index.ts",
     "./package.json": "./package.json"
   },
   "//files": "Excluding __tests__ is load-bearing, not tidiness. Consumers add `node_modules/@stonedogcode/tests/src/**` to their Panda include globs, so anything under src/ is statically parsed at THEIR build — and the tests import jest globals.",
   "files": [
+    "dist",
     "src",
     "!src/**/__tests__/**",
     "LICENSE",
@@ -30,36 +37,38 @@
     "README.md"
   ],
   "scripts": {
+    "//collect": "The CLI, run in-repo through tsx. There is deliberately no `bin`: this package ships TypeScript SOURCE (Panda needs it), and a `bin` pointing at a .ts file cannot execute on the Node 22 floor this package declares. Consumers call `collect()` from @stonedogcode/tests/node instead — a bin that only works on some of the versions you claim to support is worse than none.",
+    "//collect:fixtures": "Regenerate the demo fixtures from real repositories. They are committed so the server and the component tests run against real collected output rather than hand-written mocks.",
     "//dev": "The standalone server, in its own workspace so one root `npm install` is enough and react resolves to a single hoisted copy — two Reacts in one tree fail at runtime with 'Invalid hook call', pointing at a component rather than at the install that caused it.",
+    "//gate": "The server is type-checked here too. It is not published, but it is the worked example, and an example that does not compile is worse than none.",
+    "//panda:css": "The stylesheet itself. `panda codegen` emits the styled-system JS but no CSS; without this the standalone server renders components whose class names have no rules behind them — the exact silent failure the include globs are guarded against.",
+    "//publish:stonedog-tests": "Run from a terminal, INTERACTIVELY — npm prompts for the 2FA one-time password and the login flow needs a browser, so an agent cannot complete it. You need not log in first: it starts `npm login` itself if needed. It refuses a checkout that is detached, dirty, not on main, or behind origin/main; refuses a version the registry already has; refuses an account that is not an owner of an existing package (which would fail as a misleading 404); runs the gate and verify:package; then proves the result by installing from the registry.",
+    "//test": "Jest runs as ESM (see jest.config.cjs), which needs the VM modules flag.",
+    "//verify:package": "Pack, install the tarball into a temp directory as a consumer, typecheck through the PUBLISHED exports map and then RUN the collector from it. The running is the point: `files`, `exports` and the tarball contents are invisible to a test suite operating on source files in this repo, and they are exactly what breaks at publish time — after review, when the version is already burned.",
+    "audit": "npm audit --audit-level=moderate",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "collect": "tsx src/node/bin.ts collect",
+    "collect:fixtures": "bash scripts/collect-fixtures.sh",
     "dev": "npm run dev --workspace @stonedogcode/tests-server",
+    "gate": "npm run type-check && npm run type-check:server && npm run lint && npm run test && npm run test:integration",
+    "lint": "eslint .",
+    "panda:css": "panda cssgen --outfile styled-system/styles.css",
+    "panda:prepare": "panda codegen && npm run panda:css",
+    "prepack": "npm run build",
+    "prepare": "npm run panda:prepare",
+    "pretest": "npm run panda:prepare",
+    "pretype-check": "npm run panda:prepare",
+    "publish:stonedog-tests": "bash scripts/publish-package.sh",
+    "release": "npm run publish:stonedog-tests",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --selectProjects unit",
+    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --selectProjects unit --coverage",
+    "test:e2e": "playwright test",
+    "test:integration": "NODE_OPTIONS=--experimental-vm-modules jest --selectProjects integration",
     "type-check": "tsc --noEmit",
     "type-check:server": "npm run type-check --workspace @stonedogcode/tests-server",
-    "lint": "eslint .",
-    "//test": "Jest runs as ESM (see jest.config.cjs), which needs the VM modules flag.",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --selectProjects unit",
-    "test:integration": "NODE_OPTIONS=--experimental-vm-modules jest --selectProjects integration",
-    "test:e2e": "playwright test",
-    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --selectProjects unit --coverage",
-    "//collect": "The CLI, run in-repo through tsx. There is deliberately no `bin`: this package ships TypeScript SOURCE (Panda needs it), and a `bin` pointing at a .ts file cannot execute on the Node 22 floor this package declares. Consumers call `collect()` from @stonedogcode/tests/node instead — a bin that only works on some of the versions you claim to support is worse than none.",
-    "collect": "tsx src/node/bin.ts collect",
-    "//collect:fixtures": "Regenerate the demo fixtures from real repositories. They are committed so the server and the component tests run against real collected output rather than hand-written mocks.",
-    "collect:fixtures": "bash scripts/collect-fixtures.sh",
-    "//gate": "The server is type-checked here too. It is not published, but it is the worked example, and an example that does not compile is worse than none.",
-    "gate": "npm run type-check && npm run type-check:server && npm run lint && npm run test && npm run test:integration",
-    "//verify:package": "Pack, install the tarball into a temp directory as a consumer, typecheck through the PUBLISHED exports map and then RUN the collector from it. The running is the point: `files`, `exports` and the tarball contents are invisible to a test suite operating on source files in this repo, and they are exactly what breaks at publish time — after review, when the version is already burned.",
     "verify:package": "bash scripts/verify-package.sh",
-    "//publish:stonedog-tests": "Run from a terminal, INTERACTIVELY — npm prompts for the 2FA one-time password and the login flow needs a browser, so an agent cannot complete it. You need not log in first: it starts `npm login` itself if needed. It refuses a checkout that is detached, dirty, not on main, or behind origin/main; refuses a version the registry already has; refuses an account that is not an owner of an existing package (which would fail as a misleading 404); runs the gate and verify:package; then proves the result by installing from the registry.",
-    "publish:stonedog-tests": "bash scripts/publish-package.sh",
-    "panda:prepare": "panda codegen && npm run panda:css",
-    "release": "npm run publish:stonedog-tests",
-    "//panda:css": "The stylesheet itself. `panda codegen` emits the styled-system JS but no CSS; without this the standalone server renders components whose class names have no rules behind them — the exact silent failure the include globs are guarded against.",
-    "panda:css": "panda cssgen --outfile styled-system/styles.css",
-    "prepare": "npm run panda:prepare",
-    "pretype-check": "npm run panda:prepare",
-    "pretest": "npm run panda:prepare",
-    "version:bump:patch": "npm version patch --no-git-tag-version",
     "version:bump:minor": "npm version minor --no-git-tag-version",
-    "audit": "npm audit --audit-level=moderate"
+    "version:bump:patch": "npm version patch --no-git-tag-version"
   },
   "//dependencies": "ZERO runtime dependencies. Globbing is `node:fs/promises`'s own `glob`, which is why the engines floor is 22 rather than the fleet's usual 20 — see below.",
   "//engines": "node >=22 because the collector globs with `fs.promises.glob`, added in 22. The React layer alone would run on 20; one engines field cannot say that, and understating it would let an install succeed and the CLI fail.",
@@ -121,5 +130,7 @@
   "//publishConfig": "A scoped package defaults to RESTRICTED on npm, which requires a paid plan and would fail the publish. Declaring it here means the intent travels with the manifest instead of depending on someone remembering --access public.",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts"
 }

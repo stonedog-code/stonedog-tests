@@ -8,7 +8,7 @@
  * miniature — the number looks like evidence and was never taken.
  */
 
-import { stripJsNonCode } from "./scan-js";
+import { stripJsNonCode } from "./scan-js.js";
 
 export type Language = "typescript" | "javascript" | "python" | "other";
 

@@ -15,5 +15,5 @@
  *     components render with class names that have no CSS behind them.
  */
 
-export { FleetTable, type FleetTableProps } from "./fleet-table";
-export { TierCell, type TierCellProps } from "./tier-cell";
+export { FleetTable, type FleetTableProps } from "./fleet-table.js";
+export { TierCell, type TierCellProps } from "./tier-cell.js";

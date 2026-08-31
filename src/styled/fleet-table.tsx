@@ -35,9 +35,9 @@
 import * as React from "react";
 import { StyledTable, StyledTag, StyledText } from "@stonedogcode/style";
 
-import { readableCount, type FleetEntry } from "../fleet";
-import { shapeOf, TIERS, type Shape } from "../schema";
-import { TierCell } from "./tier-cell";
+import { readableCount, type FleetEntry } from "../fleet.js";
+import { shapeOf, TIERS, type Shape } from "../schema.js";
+import { TierCell } from "./tier-cell.js";
 
 const COLUMNS = [
   { key: "project", label: "Project" },
