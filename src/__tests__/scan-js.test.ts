@@ -1,5 +1,5 @@
-import { countCases } from "../languages";
-import { stripJsNonCode } from "../scan-js";
+import { countCases } from "../languages.js";
+import { stripJsNonCode } from "../scan-js.js";
 
 /**
  * Every case in this file is a REAL miscount this package produced against its

@@ -18,7 +18,7 @@ export {
   type Shape,
   type Tier,
   type TierReport,
-} from "./schema";
+} from "./schema.js";
 
 export {
   MANIFEST_FILENAME,
@@ -26,12 +26,12 @@ export {
   type ManifestResult,
   type TestManifest,
   type TierDeclaration,
-} from "./manifest";
+} from "./manifest.js";
 
-export { countCases, languageOf, type Language } from "./languages";
+export { countCases, languageOf, type Language } from "./languages.js";
 
 export {
   readableCount,
   toFleetEntry,
   type FleetEntry,
-} from "./fleet";
+} from "./fleet.js";

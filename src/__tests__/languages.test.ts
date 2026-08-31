@@ -1,4 +1,4 @@
-import { countCases, languageOf } from "../languages";
+import { countCases, languageOf } from "../languages.js";
 
 describe("languageOf", () => {
   it.each([

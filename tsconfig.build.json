@@ -1,0 +1,19 @@
+{
+  "//why": "A separate config for the published build. The root tsconfig is noEmit and sees the test files; a build that inherited either would emit nothing, or emit declarations referencing test globals a consumer does not have.",
+  "//module": "NodeNext rather than the root's bundler. What ships for the Node entry points must be real Node ESM, which means every relative import carries a .js extension — and NodeNext is what ENFORCES that here rather than leaving a consumer to discover it. That discovery is exactly how this package broke optima.",
+  "//styled": "src/styled is EXCLUDED from the build on purpose. It is the only surface a Panda consumer may need to parse as source, and it is consumed through a bundler with transpilePackages rather than by Node. Building it would gain nothing and could quietly cost style extraction.",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "coverage", "src/**/__tests__/**", "src/styled/**"]
+}
