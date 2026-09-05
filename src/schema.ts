@@ -9,6 +9,48 @@
 
 export const SCHEMA_VERSION = 1 as const;
 
+/**
+ * The three tiers, and why there are exactly three.
+ *
+ * The vocabulary is a decision, not a default. It measures EXECUTION COST AND
+ * ISOLATION — what a suite needs in order to run — rather than which framework
+ * wrote it or how large its subject is. That is the axis the test pyramid is a
+ * claim about, and it is the only one that stays comparable across a fleet
+ * whose repositories share no test stack.
+ *
+ * Placing a new suite is therefore a question about what it needs, and the
+ * answer is forced rather than negotiated:
+ *
+ *   - no I/O, mocks and fakes only ............................... `unit`
+ *   - a real database or a real service .................. `integration`
+ *   - a real browser, or the running app .......................... `e2e`
+ *
+ * The two suites that keep raising the question, both settled by that rule:
+ *
+ *   - A CONTRACT suite — schema and shape assertions against no database and
+ *     no browser — is `unit`. rozcards' 61 `*.contract.test.ts` files declare
+ *     as `unit` for exactly this reason: they cost what a unit test costs and
+ *     isolate the way one does, whatever runner they use and whatever the
+ *     author meant by the word.
+ *   - A Playwright COMPONENT test is `e2e`, even though its subject is one
+ *     component. It needs a real browser with a real layout engine, which is
+ *     the expensive end of the axis however small the thing under test is —
+ *     stonedog-style's `.ct.tsx` suites are the fleet's case.
+ *
+ * A fourth tier has now been proposed three times and rejected three times
+ * (NEH-1232, rozcards#231, NEH-1457), which is why the reason is written down
+ * here instead of being re-derived in a fourth issue. The cost is `shapeOf`
+ * below: it classifies by the ORDER of three numbers (`unit > integration >=
+ * e2e`), and four counts have no non-arbitrary projection onto that. A fourth
+ * ring would trade one comparable cross-fleet shape for a per-repository list
+ * of labels that compare with nothing.
+ *
+ * The price of three is real and is paid knowingly: a project running a large
+ * contract group reports a wider `unit` base than its slow-suite ratio
+ * deserves. That is a compression of a number nobody is allowed to rank
+ * projects by, and it is cheaper than a vocabulary each repository defines for
+ * itself.
+ */
 export const TIERS = ["unit", "integration", "e2e"] as const;
 export type Tier = (typeof TIERS)[number];
 
