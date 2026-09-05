@@ -64,9 +64,17 @@ export function readManifest(value: unknown): ManifestResult {
   // An unknown tier name is an ERROR, not something to ignore. A typo like
   // "integrations" would otherwise silently produce an undeclared tier, and the
   // surface would report "none declared" for a tier the author did declare.
+  //
+  // The message carries the classification rule (see TIERS in schema.ts) because
+  // this is where an author meets the vocabulary: the name they reached for was
+  // usually a fourth tier they have, not a typo, and "expected one of" alone
+  // does not say which of the three it belongs in.
   for (const key of Object.keys(tiers as Record<string, unknown>)) {
     if (!(TIERS as readonly string[]).includes(key)) {
-      errors.push(`unknown tier "${key}" (expected one of: ${TIERS.join(", ")})`);
+      errors.push(
+        `unknown tier "${key}" (expected one of: ${TIERS.join(", ")}). ` +
+          "Classify by what the suite needs to run: no I/O is unit, a real database or service is integration, a real browser or the running app is e2e.",
+      );
     }
   }
 
